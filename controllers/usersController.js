@@ -10,6 +10,8 @@ const validateUser = [
 	body("lastName").trim()
 		.isAlpha().withMessage(`Last name ${alphaErr}`)
 		.isLength({min: 1, max: 10}).withMessage(`Last name ${lengthErr}`),
+	body("email").trim()
+		.isEmail().withMessage("This email is not valid"),
 ]		
 
 
@@ -31,8 +33,8 @@ const usersCreatePost = [
 				errors: errors.array(),
 			});
 		}
-		const { firstName, lastName } = req.body;
-		usersStorage.addUser({ firstName, lastName });
+		const { firstName, lastName, email } = req.body;
+		usersStorage.addUser({ firstName, lastName, email });
 		res.redirect("/");
 	}
 ]
