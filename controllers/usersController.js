@@ -9,10 +9,14 @@ const validateUser = [
 		.isLength({ min: 1, max: 10 }).withMessage(`First name ${lengthErr}`),
 	body("lastName").trim()
 		.isAlpha().withMessage(`Last name ${alphaErr}`)
-		.isLength({min: 1, max: 10}).withMessage(`Last name ${lengthErr}`),
+		.isLength({ min: 1, max: 10 }).withMessage(`Last name ${lengthErr}`),
 	body("email").trim()
 		.isEmail().withMessage("This email is not valid"),
-]		
+	body("age").optional({ values: "falsy" }).trim()
+		.isInt({ min: 18, max: 120 }).withMessage("If introduced, age must be a number and between 18 and 120"),
+	body("bio").optional({values: "falsy"}).trim()
+		.isLength({max: 200}).withMessage("If introduced, max length is 200 characters"),
+]
 
 
 function usersListGet(req, res) {
@@ -33,8 +37,8 @@ const usersCreatePost = [
 				errors: errors.array(),
 			});
 		}
-		const { firstName, lastName, email } = req.body;
-		usersStorage.addUser({ firstName, lastName, email });
+		const { firstName, lastName, email, age, bio } = req.body;
+		usersStorage.addUser({ firstName, lastName, email, age, bio });
 		res.redirect("/");
 	}
 ]
@@ -49,7 +53,7 @@ function usersUpdateGet(req, res) {
 
 const usersUpdatePost = [
 	validateUser,
-	function(req, res) {
+	function (req, res) {
 		const user = usersStorage.getUser(req.params.id);
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
@@ -59,8 +63,8 @@ const usersUpdatePost = [
 				errors: errors.array(),
 			});
 		}
-		const {firstName, lastName} = req.body;
-		usersStorage.updateUser(req.params.id, {firstName, lastName});
+		const { firstName, lastName } = req.body;
+		usersStorage.updateUser(req.params.id, { firstName, lastName });
 		res.redirect("/");
 	}
 ];
