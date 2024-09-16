@@ -63,4 +63,9 @@ const usersUpdatePost = [
 	}
 ];
 
-module.exports = { usersListGet, usersCreateGet, usersCreatePost, usersUpdateGet, usersUpdatePost }
+function usersDeletePost(req, res) {
+	usersStorage.deleteUser(req.params.id);
+	res.redirect("/");
+}
+
+module.exports = { usersListGet, usersCreateGet, usersCreatePost, usersUpdateGet, usersUpdatePost, usersDeletePost }
