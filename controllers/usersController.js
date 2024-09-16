@@ -37,4 +37,30 @@ const usersCreatePost = [
 	}
 ]
 
-module.exports = { usersListGet, usersCreateGet, usersCreatePost }
+function usersUpdateGet(req, res) {
+	const user = usersStorage.getUser(req.params.id);
+	res.render("updateUser", {
+		title: "Update user",
+		user: user,
+	});
+}
+
+const usersUpdatePost = [
+	validateUser,
+	function(req, res) {
+		const user = usersStorage.getUser(req.params.id);
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(404).render("updateUser", {
+				title: "Update user",
+				user: user,
+				errors: errors.array(),
+			});
+		}
+		const {firstName, lastName} = req.body;
+		usersStorage.updateUser(req.params.id, {firstName, lastName});
+		res.redirect("/");
+	}
+];
+
+module.exports = { usersListGet, usersCreateGet, usersCreatePost, usersUpdateGet, usersUpdatePost }
