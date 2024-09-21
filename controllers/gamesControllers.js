@@ -13,7 +13,7 @@ async function getGames(req, res) {
 		});
 		return (`Title: ${value.title} | Developer: ${value.name} | Release date: ${date}`);
 	});
-	res.render("games", { array: results });
+	res.render("games", { array: results.length !== 0? results : null });
 }
 
 module.exports = { getGames };

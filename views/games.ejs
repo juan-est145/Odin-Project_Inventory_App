@@ -6,7 +6,11 @@
 	<title>Games</title>
 </head>
 <body>
-	<%- include("./partials/display", {array: array}) %>
+	<% if (array) { %>
+		<%- include("./partials/display", {array: array}) %>
+	<% } else { %>
+		<p>Sorry, your search didn't receive results</p>
+	<% } %>
 	<form action="/games" method="get">
 		<label for="game">Search game</label>
 		<input type="text" id="game" name="game" placeholder="game" required>
