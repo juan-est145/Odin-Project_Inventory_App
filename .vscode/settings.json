@@ -8,6 +8,15 @@
 			"name": "top_users",
 			"database": "top_users",
 			"username": "juan-est145"
+		},
+		{
+			"previewLimit": 50,
+			"server": "localhost",
+			"port": 5432,
+			"driver": "PostgreSQL",
+			"name": "op_games",
+			"database": "op_games",
+			"username": "juan-est145"
 		}
 	]
 }
