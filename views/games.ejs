@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Games</title>
+</head>
+<body>
+	<%- include("./partials/display", {array: array}) %>
+	<form action="/games" method="get">
+		<label for="game">Search game</label>
+		<input type="text" id="game" name="game" placeholder="game" required>
+	</form>
+</body>
+</html>
