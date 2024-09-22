@@ -49,7 +49,11 @@ async function getGames(req, res) {
 async function getAllGames(req, res) {
 	const query = await queries.getAllGames();
 	const results = listGames(query);
-	res.render("allGames", { array: results });
+	res.render("allView", { 
+		array: results,
+		route: "/games",
+		desc: "games" 
+	});
 }
 
 function listGames(query) {

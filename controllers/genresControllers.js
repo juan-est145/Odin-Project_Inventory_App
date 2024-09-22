@@ -3,12 +3,10 @@ const queries = require("../db/queries");
 //TO DO: Implement try/catch
 function listGenres(query) {
 	const result = query.map((value) => {
-		return (`Genre: ${value.genre} ${value.title? `| Title: ${value.title}` : ""}`);
+		return (`Genre: ${value.genre} ${value.hasOwnProperty("title")? `| Title: ${value.title}` : ""}`);
 	});
 	return (result);
 }
-
-//| Title: ${value.title}
 
 async function getGenres(req, res) {
 	const viewArgs = {
@@ -46,7 +44,11 @@ async function getGenres(req, res) {
 async function getAllGenres(req, res) {
 	const query = await queries.getAllGenres();
 	const results = listGenres(query);
-	res.render("allGames", { array: results });
+	res.render("allView", { 
+		array: results,
+		route: "/genres",
+		desc: "genres",
+	});
 }
 
 module.exports = { getAllGenres, getGenres };
