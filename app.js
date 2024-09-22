@@ -13,6 +13,9 @@ app.use("/", indexRouter);
 app.use("/games", gamesRouter);
 app.use("/genres", genresRouter);
 app.use("/devs", devsRouter);
+app.use((req, res, next) => {
+	res.status(404).send("404: Page not found");
+});
 app.use((error,req, res, next) => {
 	console.error(error.stack);
 	res.status(500).send("Something went wrong, please, try at another time");
