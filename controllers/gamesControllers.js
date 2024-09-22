@@ -15,6 +15,7 @@ function listGames(query) {
 
 async function getGames(req, res) {
 	const viewArgs = {
+		array: [],
 		action: "/games",
 		method: "/get",
 		id: "game",
@@ -24,26 +25,11 @@ async function getGames(req, res) {
 	const reqParm = req.query.game;
 	const query = reqParm ? await queries.getGame(reqParm) : null;
 	
-	if (query === null) {
-		res.render("getView", { 
-			array: [],
-			action: viewArgs.action,
-			method: viewArgs.method,
-			id: viewArgs.id,
-			allRoute: viewArgs.allRoute,
-			descText: viewArgs.descText,
-		});
-		return;
+	if (query) {
+		const results = listGames(query);
+		viewArgs.array = results.length !== 0 ? results : null;
 	}
-	const results = listGames(query);	
-	res.render("getView", { 
-		array: results.length !== 0 ? results : null,
-		action: viewArgs.action,
-		method: viewArgs.method,
-		id: viewArgs.id,
-		allRoute: viewArgs.allRoute,
-		descText: viewArgs.descText,
-	});
+	res.render("getView", viewArgs);
 }
 
 async function getAllGames(req, res) {

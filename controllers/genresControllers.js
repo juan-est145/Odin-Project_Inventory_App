@@ -10,6 +10,7 @@ function listGenres(query) {
 
 async function getGenres(req, res) {
 	const viewArgs = {
+		array: [],
 		action: "/genres",
 		method: "/get",
 		id: "genre",
@@ -19,26 +20,11 @@ async function getGenres(req, res) {
 	const reqParm = req.query.genre;
 	const query = reqParm ? await queries.getGenre(reqParm) : null;
 	
-	if (query === null) {
-		res.render("getView", { 
-			array: [],
-			action: viewArgs.action,
-			method: viewArgs.method,
-			id: viewArgs.id,
-			allRoute: viewArgs.allRoute,
-			descText: viewArgs.descText,
-		});
-		return;
-	}
-	const results = listGenres(query);
-	res.render("getView", { 
-		array: results.length !== 0 ? results : null,
-		action: viewArgs.action,
-		method: viewArgs.method,
-		id: viewArgs.id,
-		allRoute: viewArgs.allRoute,
-		descText: viewArgs.descText,
-	});
+	if (query) {
+		const results = listGenres(query);
+		viewArgs.array = results.length !== 0 ? results : null;
+	}		
+	res.render("getView", viewArgs);
 }
 
 async function getAllGenres(req, res) {
