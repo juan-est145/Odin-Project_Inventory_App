@@ -1,4 +1,12 @@
 const queries = require("../db/queries");
+const { query, validationResult } = require("express-validator");
+
+const lengthErr = "must be between 1 and 255 characters";
+
+const validateInput = [
+	query("game").trim()
+		.isLength({ max: 255 }).withMessage(`Search length ${lengthErr}`),
+];
 
 function listGames(query) {
 	const results = query.map((value) => {
@@ -12,28 +20,38 @@ function listGames(query) {
 	return (results);
 }
 
-async function getGames(req, res, next) {
-	const viewArgs = {
-		array: [],
-		action: "/games",
-		method: "/get",
-		id: "game",
-		allRoute: "/games/all",
-		descText: "games",
-	};
-	try {
-		const reqParm = req.query.game;
-		const query = reqParm ? await queries.getGame(reqParm) : null;
-		
-		if (query) {
-			const results = listGames(query);
-			viewArgs.array = results.length !== 0 ? results : null;
+const getGames = [
+	validateInput,
+	async function get(req, res, next) {
+		const viewArgs = {
+			array: [],
+			action: "/games",
+			method: "/get",
+			id: "game",
+			allRoute: "/games/all",
+			descText: "games",
+			errors: null,
+		};
+		try {
+			const reqParm = req.query.game;
+			if (reqParm) {
+				const errors = validationResult(req);
+				if (!errors.isEmpty()) {
+					viewArgs.errors = errors.array();
+					return res.status(404).render("getView", viewArgs);
+				}
+			}
+			const query = reqParm ? await queries.getGame(reqParm) : null;
+			if (query) {
+				const results = listGames(query);
+				viewArgs.array = results.length !== 0 ? results : null;
+			}
+			res.render("getView", viewArgs);
+		} catch (error) {
+			next(error);
 		}
-		res.render("getView", viewArgs);
-	} catch (error) {
-		next(error);
 	}
-}
+];
 
 async function getAllGames(req, res, next) {
 	try {

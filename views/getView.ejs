@@ -6,6 +6,11 @@
 	<title>Games</title>
 </head>
 <body>
+	<% if (errors) { %>
+		<% for (let i = 0; i < errors.length; i++) { %>
+			<li><%= errors[i].msg %></li>
+		<% } %>
+	<% } %>
 	<% if (array) { %>
 		<%- include("./partials/display", {array: array}) %>
 	<% } else { %>
