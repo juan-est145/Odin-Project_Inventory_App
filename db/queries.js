@@ -29,4 +29,17 @@ async function getGenre(genre) {
 	return (rows);
 }
 
-module.exports = { getAllGames, getGame, getAllGenres, getGenre };
+async function getAllDevs() {
+	const { rows } = await pool.query("SELECT * FROM developers");
+	return (rows);
+}
+
+async function getDevs(devs) {
+	const { rows } = await pool.query("SELECT games.id, games.title, games.release_date, developers.name\
+										FROM games\
+										INNER JOIN developers ON games.dev_id=developers.id\
+										WHERE name ILIKE $1;", [`${devs}%`]);
+	return (rows);
+}
+
+module.exports = { getAllGames, getGame, getAllGenres, getGenre, getAllDevs, getDevs };
