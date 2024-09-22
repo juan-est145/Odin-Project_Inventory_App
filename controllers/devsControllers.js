@@ -1,5 +1,7 @@
 const queries = require("../db/queries");
 
+//TO DO: Implement validators for get requests and getQuery add a return null statement
+
 function listDevs(query) {
 	const result = query.map((value) => {
 		return (`Developer: ${value.name} ${value.hasOwnProperty("title") ? `| Title: ${value.title}` : ""}`);
@@ -15,6 +17,7 @@ async function getDevs(req, res, next) {
 		id: "devs",
 		allRoute: "/devs/all",
 		descText: "devs",
+		errors: null,
 	};
 	try {
 		const reqParm = req.query.devs;

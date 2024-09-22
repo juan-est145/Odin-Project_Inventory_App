@@ -1,5 +1,7 @@
 const queries = require("../db/queries");
 
+//TO DO: Implement validators for get requests and getQuery add a return null statement
+
 function listGenres(query) {
 	const result = query.map((value) => {
 		return (`Genre: ${value.genre} ${value.hasOwnProperty("title") ? `| Title: ${value.title}` : ""}`);
@@ -15,6 +17,7 @@ async function getGenres(req, res, next) {
 		id: "genre",
 		allRoute: "/genres/all",
 		descText: "genres",
+		errors: null,
 	};
 	try {
 		const reqParm = req.query.genre;

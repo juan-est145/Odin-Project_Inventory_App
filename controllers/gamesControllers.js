@@ -41,7 +41,7 @@ const getGames = [
 					return res.status(404).render("getView", viewArgs);
 				}
 			}
-			const query = reqParm ? await queries.getGame(reqParm) : null;
+			const query = await queries.getGame(reqParm);
 			if (query) {
 				const results = listGames(query);
 				viewArgs.array = results.length !== 0 ? results : null;
