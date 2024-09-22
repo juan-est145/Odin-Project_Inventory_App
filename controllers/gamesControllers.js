@@ -24,7 +24,7 @@ async function getGames(req, res) {
 	};
 	const reqParm = req.query.game;
 	const query = reqParm ? await queries.getGame(reqParm) : null;
-	
+
 	if (query) {
 		const results = listGames(query);
 		viewArgs.array = results.length !== 0 ? results : null;
@@ -33,13 +33,18 @@ async function getGames(req, res) {
 }
 
 async function getAllGames(req, res) {
-	const query = await queries.getAllGames();
-	const results = listGames(query);
-	res.render("allView", { 
-		array: results,
-		route: "/games",
-		desc: "games" 
-	});
+	try {
+		const query = await queries.getAllGames();
+		const results = listGames(query);
+		res.render("allView", {
+			array: results,
+			route: "/games",
+			desc: "games"
+		});
+	} catch (error) {
+		res.send("uwu, We make a fucky wucky");
+	}
+
 }
 
 function listGames(query) {
