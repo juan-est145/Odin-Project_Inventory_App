@@ -14,14 +14,33 @@ function listGames(query) {
 }
 
 async function getGames(req, res) {
+	const viewArgs = {
+		action: "/games",
+		method: "/get",
+		id: "game",
+		allRoute: "/games/all",
+	};
 	const reqParm = req.query.game;
 	const query = reqParm ? await queries.getGame(reqParm) : null;
+	
 	if (query === null) {
-		res.render("games", { array: [] });
+		res.render("getView", { 
+			array: [],
+			action: viewArgs.action,
+			method: viewArgs.method,
+			id: viewArgs.id,
+			allRoute: viewArgs.allRoute, 
+		});
 		return;
 	}
-	const results = listGames(query);
-	res.render("games", { array: results.length !== 0 ? results : null });
+	const results = listGames(query);	
+	res.render("getView", { 
+		array: results.length !== 0 ? results : null,
+		action: viewArgs.action,
+		method: viewArgs.method,
+		id: viewArgs.id,
+		allRoute: viewArgs.allRoute,
+	});
 }
 
 async function getAllGames(req, res) {

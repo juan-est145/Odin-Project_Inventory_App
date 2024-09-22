@@ -11,11 +11,11 @@
 	<% } else { %>
 		<p>Sorry, your search didn't receive results</p>
 	<% } %>
-	<form action="/games" method="get">
-		<label for="game">Search game</label>
-		<input type="text" id="game" name="game" placeholder="game" required>
+	<form action=<%= action %> method=<%= method %>>
+		<label for=<%= id %>>Search game</label>
+		<input type="text" id=<%= id %> name=<%= id %> placeholder=<%= id %> required>
 		<button type="submit">Send</button>
 	</form>
-	<a href="/games/all">See all games</a>
+	<a href=<%= allRoute %>>See all games</a>
 </body>
 </html>
