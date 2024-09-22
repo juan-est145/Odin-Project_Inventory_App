@@ -1,7 +1,5 @@
 const pool = require("./pool");
 
-//TO DO: Implement try/catch
-
 async function getAllGames() {
 	try {
 		const { rows } = await pool.query("SELECT games.id, games.title, games.release_date, developers.name \
@@ -9,6 +7,7 @@ async function getAllGames() {
 		return (rows);
 	} catch (error) {
 		console.error(error);
+		throw error;
 	}
 }
 
@@ -20,8 +19,8 @@ async function getGame(game) {
 		return (rows);
 	} catch (error) {
 		console.error(error);
+		throw error;
 	}
-
 }
 
 async function getAllGenres() {
@@ -30,6 +29,7 @@ async function getAllGenres() {
 		return (rows);
 	} catch (error) {
 		console.error(error);
+		throw error;
 	}
 }
 
@@ -43,6 +43,7 @@ async function getGenre(genre) {
 		return (rows);
 	} catch (error) {
 		console.error(error);
+		throw error;
 	}
 }
 
@@ -52,6 +53,7 @@ async function getAllDevs() {
 		return (rows);
 	} catch (error) {
 		console.error(error);
+		throw error;
 	}
 }
 
@@ -64,6 +66,7 @@ async function getDevs(devs) {
 		return (rows);
 	} catch (error) {
 		console.error(error);
+		throw error;
 	}
 }
 

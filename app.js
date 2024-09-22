@@ -13,6 +13,10 @@ app.use("/", indexRouter);
 app.use("/games", gamesRouter);
 app.use("/genres", genresRouter);
 app.use("/devs", devsRouter);
+app.use((error,req, res, next) => {
+	console.error(error.stack);
+	res.status(500).send("Something went wrong, please, try at another time");
+});
 
 const PORT = process.env.PORT = 3000;
 app.listen(PORT, () => console.log(`Express app listening on port ${PORT}!`));

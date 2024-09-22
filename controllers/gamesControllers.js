@@ -1,6 +1,5 @@
 const queries = require("../db/queries");
 
-//TO DO: Implement try/catch
 function listGames(query) {
 	const results = query.map((value) => {
 		const date = new Date(value.release_date).toLocaleDateString("en-US", {
@@ -13,7 +12,7 @@ function listGames(query) {
 	return (results);
 }
 
-async function getGames(req, res) {
+async function getGames(req, res, next) {
 	const viewArgs = {
 		array: [],
 		action: "/games",
@@ -22,17 +21,21 @@ async function getGames(req, res) {
 		allRoute: "/games/all",
 		descText: "games",
 	};
-	const reqParm = req.query.game;
-	const query = reqParm ? await queries.getGame(reqParm) : null;
-
-	if (query) {
-		const results = listGames(query);
-		viewArgs.array = results.length !== 0 ? results : null;
+	try {
+		const reqParm = req.query.game;
+		const query = reqParm ? await queries.getGame(reqParm) : null;
+		
+		if (query) {
+			const results = listGames(query);
+			viewArgs.array = results.length !== 0 ? results : null;
+		}
+		res.render("getView", viewArgs);
+	} catch (error) {
+		next(error);
 	}
-	res.render("getView", viewArgs);
 }
 
-async function getAllGames(req, res) {
+async function getAllGames(req, res, next) {
 	try {
 		const query = await queries.getAllGames();
 		const results = listGames(query);
@@ -42,21 +45,8 @@ async function getAllGames(req, res) {
 			desc: "games"
 		});
 	} catch (error) {
-		res.send("uwu, We make a fucky wucky");
+		next(error);
 	}
-
-}
-
-function listGames(query) {
-	const results = query.map((value) => {
-		const date = new Date(value.release_date).toLocaleDateString("en-US", {
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric'
-		});
-		return (`Title: ${value.title} | Developer: ${value.name} | Release date: ${date}`);
-	});
-	return (results);
 }
 
 module.exports = { getGames, getAllGames };
