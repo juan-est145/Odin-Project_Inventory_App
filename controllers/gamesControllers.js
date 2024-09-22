@@ -1,7 +1,6 @@
 const queries = require("../db/queries");
 
 //TO DO: Implement try/catch
-
 function listGames(query) {
 	const results = query.map((value) => {
 		const date = new Date(value.release_date).toLocaleDateString("en-US", {
@@ -16,19 +15,19 @@ function listGames(query) {
 
 async function getGames(req, res) {
 	const reqParm = req.query.game;
-	const query = reqParm? await queries.getGame(reqParm) : null;
+	const query = reqParm ? await queries.getGame(reqParm) : null;
 	if (query === null) {
 		res.render("games", { array: [] });
 		return;
 	}
 	const results = listGames(query);
-	res.render("games", { array: results.length !== 0? results : null });
+	res.render("games", { array: results.length !== 0 ? results : null });
 }
 
 async function getAllGames(req, res) {
 	const query = await queries.getAllGames();
 	const results = listGames(query);
-	res.render("allGames", {array: results});
+	res.render("allGames", { array: results });
 }
 
 function listGames(query) {

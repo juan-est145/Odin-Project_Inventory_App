@@ -15,4 +15,9 @@ async function getGame(game) {
 	return (rows);
 }
 
-module.exports = { getAllGames, getGame };
+async function getAllGenres() {
+	const { rows } = await pool.query("SELECT * FROM GENRES");
+	return (rows);
+}
+
+module.exports = { getAllGames, getGame, getAllGenres };
