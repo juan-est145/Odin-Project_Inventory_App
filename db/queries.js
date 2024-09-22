@@ -25,7 +25,7 @@ async function getGame(game) {
 
 async function getAllGenres() {
 	try {
-		const { rows } = await pool.query("SELECT * FROM GENRES");
+		const { rows } = await pool.query("SELECT * FROM genres");
 		return (rows);
 	} catch (error) {
 		console.error(error);
