@@ -3,17 +3,19 @@ const queries = require("../db/queries");
 //TO DO: Implement try/catch
 function listGenres(query) {
 	const result = query.map((value) => {
-		return (`Genre: ${value.genre} | Title: ${value.title}`);
+		return (`Genre: ${value.genre} ${value.title? `| Title: ${value.title}` : ""}`);
 	});
 	return (result);
 }
+
+//| Title: ${value.title}
 
 async function getGenres(req, res) {
 	const viewArgs = {
 		action: "/genres",
 		method: "/get",
 		id: "genre",
-		allRoute: "/genre/all",
+		allRoute: "/genres/all",
 		descText: "genres",
 	};
 	const reqParm = req.query.genre;
