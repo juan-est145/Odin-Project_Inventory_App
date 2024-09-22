@@ -12,10 +12,10 @@
 		<p>Sorry, your search didn't receive results</p>
 	<% } %>
 	<form action=<%= action %> method=<%= method %>>
-		<label for=<%= id %>>Search game</label>
+		<label for=<%= id %>>Search <%= descText %></label>
 		<input type="text" id=<%= id %> name=<%= id %> placeholder=<%= id %> required>
 		<button type="submit">Send</button>
 	</form>
-	<a href=<%= allRoute %>>See all games</a>
+	<a href=<%= allRoute %>>See all <%= descText %></a>
 </body>
 </html>

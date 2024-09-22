@@ -20,4 +20,13 @@ async function getAllGenres() {
 	return (rows);
 }
 
-module.exports = { getAllGames, getGame, getAllGenres };
+async function getGenre(genre) {
+	const { rows } = await pool.query("SELECT games.title, genres.genre\
+										FROM game_genre\
+											INNER JOIN games ON games.id=game_genre.game_id\
+											INNER JOIN genres ON genres.id=game_genre.genre_id\
+										WHERE genres.genre ILIKE $1;", [`${genre}%`]);
+	return (rows);
+}
+
+module.exports = { getAllGames, getGame, getAllGenres, getGenre };

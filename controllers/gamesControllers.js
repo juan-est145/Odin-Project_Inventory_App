@@ -19,6 +19,7 @@ async function getGames(req, res) {
 		method: "/get",
 		id: "game",
 		allRoute: "/games/all",
+		descText: "games",
 	};
 	const reqParm = req.query.game;
 	const query = reqParm ? await queries.getGame(reqParm) : null;
@@ -29,7 +30,8 @@ async function getGames(req, res) {
 			action: viewArgs.action,
 			method: viewArgs.method,
 			id: viewArgs.id,
-			allRoute: viewArgs.allRoute, 
+			allRoute: viewArgs.allRoute,
+			descText: viewArgs.descText,
 		});
 		return;
 	}
@@ -40,6 +42,7 @@ async function getGames(req, res) {
 		method: viewArgs.method,
 		id: viewArgs.id,
 		allRoute: viewArgs.allRoute,
+		descText: viewArgs.descText,
 	});
 }
 
