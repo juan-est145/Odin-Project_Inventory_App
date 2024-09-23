@@ -1,3 +1,4 @@
+require("dotenv").config();
 const { query, body, validationResult } = require("express-validator");
 const queries = require("../db/queries");
 
@@ -9,7 +10,9 @@ const validateGet = [
 
 const validatePost = [
 	body("newDev").trim()
-		.isLength({ min: 1, max: 255 }).withMessage(`Search length ${lengthErr}`)
+		.isLength({ min: 1, max: 255 }).withMessage(`Dev name length ${lengthErr}`),
+	body("password").trim()
+		.notEmpty().equals(process.env.HTTP_PASSWORD).withMessage("Incorrect password"),
 ];
 
 function listDevs(query) {
@@ -77,12 +80,12 @@ const postNewDev = [
 			const reqParm = req.body.newDev;
 			const errors = validationResult(req);
 			if (!errors.isEmpty())
-				return res.render("newDev", { error: errors.array() });
+				return res.status(400).render("newDev", { error: errors.array() });
 			await queries.postGenre(reqParm);
 			res.redirect("/devs");
 		} catch (error) {
 			if (error.constraint === 'unique_name')
-				return res.render("newDev", { error: [{ msg: "That developer is already registered" }] });
+				return res.status(400).render("newDev", { error: [{ msg: "That developer is already registered" }] });
 			next(error);
 		}
 	}

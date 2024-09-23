@@ -21,6 +21,6 @@
 	</form>
 	<a href="/">Return to homepage</a>
 	<a href=<%= allRoute %>>See all <%= descText %></a>
-	<a href="/devs/new">Add a new <%= descText.slice(0, descText.length - 1); %></a>
+	<a href=<%=`${action}/new`%>>Add a new <%= descText.slice(0, descText.length - 1); %></a>
 </body>
 </html>
