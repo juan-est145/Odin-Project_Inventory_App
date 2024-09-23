@@ -62,6 +62,8 @@ async function getAllDevs() {
 }
 
 async function getDevs(devs) {
+	if (!devs)
+		return (null);
 	try {
 		const { rows } = await pool.query("SELECT games.id, games.title, games.release_date, developers.name\
 			FROM games\

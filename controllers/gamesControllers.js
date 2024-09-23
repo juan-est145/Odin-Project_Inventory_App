@@ -2,7 +2,6 @@ const queries = require("../db/queries");
 const { query, validationResult } = require("express-validator");
 
 const lengthErr = "must be between 1 and 255 characters";
-
 const validateInput = [
 	query("game").trim()
 		.isLength({ max: 255 }).withMessage(`Search length ${lengthErr}`),
