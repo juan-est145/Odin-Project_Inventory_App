@@ -1,6 +1,11 @@
 const queries = require("../db/queries");
+const { query, validationResult } = require("express-validator");
 
-//TO DO: Implement validators for get requests and getQuery add a return null statement
+const lengthErr = "must be between 1 and 255 characters";
+const validateInput = [
+	query("genre").trim()
+		.isLength({ max: 255 }).withMessage(`Search length ${lengthErr}`),
+];
 
 function listGenres(query) {
 	const result = query.map((value) => {
@@ -9,29 +14,40 @@ function listGenres(query) {
 	return (result);
 }
 
-async function getGenres(req, res, next) {
-	const viewArgs = {
-		array: [],
-		action: "/genres",
-		method: "/get",
-		id: "genre",
-		allRoute: "/genres/all",
-		descText: "genres",
-		errors: null,
-	};
-	try {
-		const reqParm = req.query.genre;
-		const query = reqParm ? await queries.getGenre(reqParm) : null;
-
-		if (query) {
-			const results = listGenres(query);
-			viewArgs.array = results.length !== 0 ? results : null;
+const getGenres = [
+	validateInput,
+	async function getGenres(req, res, next) {
+		const viewArgs = {
+			array: [],
+			action: "/genres",
+			method: "/get",
+			id: "genre",
+			allRoute: "/genres/all",
+			descText: "genres",
+			errors: null,
+		};
+		try {
+			const reqParm = req.query.genre;
+			if (reqParm) {
+				const errors = validationResult(req);
+				if (!errors.isEmpty()){
+					viewArgs.errors = errors.array();
+					return (res.status(400).render("getView", viewArgs));
+				}
+			}
+			const query = await queries.getGenre(reqParm);
+			if (query) {
+				const results = listGenres(query);
+				viewArgs.array = results.length !== 0 ? results : null;
+			}
+			res.render("getView", viewArgs);
+		} catch (error) {
+			next(error);
 		}
-		res.render("getView", viewArgs);
-	} catch (error) {
-		next(error);
 	}
-}
+];
+
+
 
 async function getAllGenres(req, res, next) {
 	try {

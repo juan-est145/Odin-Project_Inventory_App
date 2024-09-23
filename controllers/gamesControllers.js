@@ -38,7 +38,7 @@ const getGames = [
 				const errors = validationResult(req);
 				if (!errors.isEmpty()) {
 					viewArgs.errors = errors.array();
-					return res.status(404).render("getView", viewArgs);
+					return res.status(400).render("getView", viewArgs);
 				}
 			}
 			const query = await queries.getGame(reqParm);

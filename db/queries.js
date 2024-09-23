@@ -36,6 +36,8 @@ async function getAllGenres() {
 }
 
 async function getGenre(genre) {
+	if (!genre)
+		return (null);
 	try {
 		const { rows } = await pool.query("SELECT games.title, genres.genre\
 			FROM game_genre\
