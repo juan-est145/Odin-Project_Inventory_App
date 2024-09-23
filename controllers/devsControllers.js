@@ -61,4 +61,13 @@ async function getAllDevs(req, res, next) {
 	}
 }
 
-module.exports = { getDevs, getAllDevs }
+function getNewDev(req, res) {
+	res.render("newDev");
+}
+
+async function postNewDev(req, res) {
+	console.log("Request received " + req.body.newDev);
+	res.redirect("/devs");
+}
+
+module.exports = { getDevs, getAllDevs, getNewDev, postNewDev }
