@@ -9,7 +9,7 @@ const validateGet = [
 
 const validatePost = [
 	body("newDev").trim()
-		.isLength({ max: 255 }).withMessage(`Search length ${lengthErr}`)
+		.isLength({ min: 1, max: 255 }).withMessage(`Search length ${lengthErr}`)
 ];
 
 function listDevs(query) {
@@ -67,30 +67,22 @@ async function getAllDevs(req, res, next) {
 }
 
 function getNewDev(req, res) {
-	res.render("newDev");
+	res.render("newDev", { error: null });
 }
 
-//TO DO: Implement error handling and view
 const postNewDev = [
 	validatePost,
 	async function postNewDev(req, res, next) {
 		try {
 			const reqParm = req.body.newDev;
-			if (reqParm) {
-				const errors = validationResult(req);
-				if (!errors.isEmpty()) {
-					console.log(errors.array());
-					return;
-				}
-			}
-			const query = await queries.postGenre(reqParm);
+			const errors = validationResult(req);
+			if (!errors.isEmpty())
+				return res.render("newDev", { error: errors.array() });
+			await queries.postGenre(reqParm);
 			res.redirect("/devs");
 		} catch (error) {
-			if (error.constraint && error.constraint === 'unique_name') {
-				console.log("Esto ha funcionado");
-				res.redirect("/devs");
-				return ;
-			}
+			if (error.constraint === 'unique_name')
+				return res.render("newDev", { error: [{ msg: "That developer is already registered" }] });
 			next(error);
 		}
 	}

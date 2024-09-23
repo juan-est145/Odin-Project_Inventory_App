@@ -6,6 +6,9 @@
 	<title>New dev form</title>
 </head>
 <body>
+	<% if (error) { %>
+		<%- include("./partials/errors", { errors: error }) %>
+	<%} %>
 	<form action="/devs/new" method="post">
 		<label for="newDev">Enter dev name</label>
 		<input type="text" name="newDev" id="newDev" placeholder="Dev name" required>
