@@ -51,6 +51,18 @@ async function getGenre(genre) {
 	}
 }
 
+async function postGenre(genre) {
+	if (!genre)
+		return (null);
+	try {
+		const { rows } = await pool.query("INSERT INTO developers(name) VALUES($1);", [genre]);
+		return (rows);
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+}
+
 async function getAllDevs() {
 	try {
 		const { rows } = await pool.query("SELECT * FROM developers");
@@ -76,24 +88,12 @@ async function getDevs(devs) {
 	}
 }
 
-async function postGenre(genre) {
-	if (!genre)
-		return (null);
-	try {
-		const { rows } = await pool.query("INSERT INTO developers(name) VALUES($1);", [genre]);
-		return (rows);
-	} catch (error) {
-		console.error(error);
-		throw error;
-	}
-}
-
-module.exports = { 
-	getAllGames, 
-	getGame, 
-	getAllGenres, 
-	getGenre, 
-	getAllDevs, 
-	getDevs, 
-	postGenre 
+module.exports = {
+	getAllGames,
+	getGame,
+	getAllGenres,
+	getGenre,
+	postGenre,
+	getAllDevs,
+	getDevs,
 };

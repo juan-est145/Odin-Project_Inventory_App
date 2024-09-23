@@ -70,7 +70,7 @@ function getNewDev(req, res) {
 	res.render("newDev");
 }
 
-//TO DO: Implement error handling and view and duplicate genre
+//TO DO: Implement error handling and view
 const postNewDev = [
 	validatePost,
 	async function postNewDev(req, res, next) {
@@ -86,6 +86,11 @@ const postNewDev = [
 			const query = await queries.postGenre(reqParm);
 			res.redirect("/devs");
 		} catch (error) {
+			if (error.constraint && error.constraint === 'unique_name') {
+				console.log("Esto ha funcionado");
+				res.redirect("/devs");
+				return ;
+			}
 			next(error);
 		}
 	}
