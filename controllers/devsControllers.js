@@ -1,10 +1,15 @@
-const { query, validationResult } = require("express-validator");
+const { query, body, validationResult } = require("express-validator");
 const queries = require("../db/queries");
 
 const lengthErr = "must be between 1 and 255 characters";
-const validateInput = [
+const validateGet = [
 	query("devs").trim()
 		.isLength({ max: 255 }).withMessage(`Search length ${lengthErr}`),
+];
+
+const validatePost = [
+	body("newDev").trim()
+		.isLength({ max: 255 }).withMessage(`Search length ${lengthErr}`)
 ];
 
 function listDevs(query) {
@@ -15,7 +20,7 @@ function listDevs(query) {
 }
 
 const getDevs = [
-	validateInput,
+	validateGet,
 	async function getDevs(req, res, next) {
 		const viewArgs = {
 			array: [],
@@ -65,9 +70,25 @@ function getNewDev(req, res) {
 	res.render("newDev");
 }
 
-async function postNewDev(req, res) {
-	console.log("Request received " + req.body.newDev);
-	res.redirect("/devs");
-}
+//TO DO: Implement error handling and view and duplicate genre
+const postNewDev = [
+	validatePost,
+	async function postNewDev(req, res, next) {
+		try {
+			const reqParm = req.body.newDev;
+			if (reqParm) {
+				const errors = validationResult(req);
+				if (!errors.isEmpty()) {
+					console.log(errors.array());
+					return;
+				}
+			}
+			const query = await queries.postGenre(reqParm);
+			res.redirect("/devs");
+		} catch (error) {
+			next(error);
+		}
+	}
+];
 
 module.exports = { getDevs, getAllDevs, getNewDev, postNewDev }
