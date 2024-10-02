@@ -55,7 +55,7 @@ async function postGenre(genre) {
 	if (!genre)
 		return (null);
 	try {
-		const { rows } = await pool.query("INSERT INTO developers(name) VALUES($1);", [genre]);
+		const { rows } = await pool.query("INSERT INTO genres(genre) VALUES($1);", [genre]);
 		return (rows);
 	} catch (error) {
 		console.error(error);
@@ -88,6 +88,18 @@ async function getDevs(devs) {
 	}
 }
 
+async function postDev(dev) {
+	if (!dev)
+		return (null);
+	try {
+		const { rows } = await pool.query("INSERT INTO developers(name) VALUES($1);", [dev]);
+		return (rows);
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+}
+
 module.exports = {
 	getAllGames,
 	getGame,
@@ -96,4 +108,5 @@ module.exports = {
 	postGenre,
 	getAllDevs,
 	getDevs,
+	postDev,
 };

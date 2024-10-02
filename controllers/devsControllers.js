@@ -81,7 +81,7 @@ const postNewDev = [
 			const errors = validationResult(req);
 			if (!errors.isEmpty())
 				return res.status(400).render("newDev", { error: errors.array() });
-			await queries.postGenre(reqParm);
+			await queries.postDev(reqParm);
 			res.redirect("/devs");
 		} catch (error) {
 			if (error.constraint === 'unique_name')

@@ -1,10 +1,16 @@
 const queries = require("../db/queries");
-const { query, validationResult } = require("express-validator");
+const { body, query, validationResult } = require("express-validator");
 
 const lengthErr = "must be between 1 and 255 characters";
-const validateInput = [
+const validateGet = [
 	query("genre").trim()
 		.isLength({ max: 255 }).withMessage(`Search length ${lengthErr}`),
+];
+const validatePost = [
+	body("newGenre").trim()
+		.isLength({ min: 1, max: 255 }).withMessage(`Genre name length ${lengthErr}`),
+	body("password").trim()
+		.notEmpty().equals(process.env.HTTP_PASSWORD).withMessage("Incorrect password"),
 ];
 
 function listGenres(query) {
@@ -15,7 +21,7 @@ function listGenres(query) {
 }
 
 const getGenres = [
-	validateInput,
+	validateGet,
 	async function getGenres(req, res, next) {
 		const viewArgs = {
 			array: [],
@@ -30,7 +36,7 @@ const getGenres = [
 			const reqParm = req.query.genre;
 			if (reqParm) {
 				const errors = validationResult(req);
-				if (!errors.isEmpty()){
+				if (!errors.isEmpty()) {
 					viewArgs.errors = errors.array();
 					return (res.status(400).render("getView", viewArgs));
 				}
@@ -47,8 +53,6 @@ const getGenres = [
 	}
 ];
 
-
-
 async function getAllGenres(req, res, next) {
 	try {
 		const query = await queries.getAllGenres();
@@ -63,4 +67,26 @@ async function getAllGenres(req, res, next) {
 	}
 }
 
-module.exports = { getAllGenres, getGenres };
+function getNewGenre(req, res) {
+	res.render("newGenre", { error: null });
+}
+
+const postNewGenre = [
+	validatePost,
+	async function postNewGenre(req, res, next) {
+		try {
+			const reqParm = req.body.newGenre;
+			const errors = validationResult(req);
+			if (!errors.isEmpty())
+				return res.status(400).render("newGenre", { error: errors.array() });
+			await queries.postGenre(reqParm);
+			res.redirect("/genres");
+		} catch (error) {
+			if (error.constraint === 'unique_genre')
+				return res.status(400).render("newGenre", { error: [{ msg: "That genre is already registered" }] });
+			next(error);
+		}
+	}
+];
+
+module.exports = { getAllGenres, getGenres, getNewGenre, postNewGenre };
