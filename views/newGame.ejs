@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>New game form</title>
+</head>
+<body>
+	<% if (error) { %>
+		<%- include("./partials/errors", { errors: error }) %>
+	<%} %>
+	<form action="/games/new" method="post">
+		<label for="newGame">Enter game title</label>
+		<input type="text" name="newGame" id="newGame" placeholder="Game title" required>
+		<%- include("./partials/devDropdwn", { devs: devs }) %>
+		<%- include("./partials/genresOptns", { genres: genres }) %>
+		<label for="password">Password</label>
+		<input type="password" name="password" id="password" placeholder="Password" required>
+		<button type="submit">Send</button>
+	</form>
+</body>
+</html>

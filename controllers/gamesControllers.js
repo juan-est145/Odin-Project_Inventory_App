@@ -66,4 +66,14 @@ async function getAllGames(req, res, next) {
 	}
 }
 
-module.exports = { getGames, getAllGames };
+async function getNewGame(req, res, next) {
+	try {
+		const devs = await queries.getAllDevs();
+		const genres = await queries.getAllGenres();
+		res.render("newGame", { devs: devs, genres: genres ,error: null });
+	} catch (error) {
+		next(error);
+	}
+}
+
+module.exports = { getGames, getAllGames, getNewGame };

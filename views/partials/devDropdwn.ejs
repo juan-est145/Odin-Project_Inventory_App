@@ -1,0 +1,5 @@
+<select name="devsList" id="devsList">
+	<% for (let i = 0; i < devs.length; i++) { %>
+		<option value=<%= devs[i].name %>><%= devs[i].name %></option>
+	<% } %>
+</select>
