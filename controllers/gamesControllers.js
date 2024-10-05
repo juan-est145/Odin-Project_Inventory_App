@@ -13,6 +13,8 @@ const validatePost = [
 	body("date").trim()
 		.notEmpty().withMessage("Date cannot be empty")
 		.isDate().withMessage("Please enter a valid date"),
+	body("password").trim()
+	.notEmpty().equals(process.env.HTTP_PASSWORD).withMessage("Incorrect password"),
 	body("devsList").trim()
 		.exists({ values: "falsy" }).withMessage("Select a dev")
 		.isLength({ min: 1, max: 255 }).withMessage(`Dev name length ${lengthErr}`)
@@ -29,7 +31,7 @@ const validatePost = [
 		.custom(async (value, { req }) => {
 			const genres = await queries.getAllGenres();
 			const genresName = genres.map(genre => genre.genre);
-			const genresList = Array(req.body.genres);
+			const genresList = Array.isArray(req.body.genres)? req.body.genres : Array(req.body.genres);
 			const allGenresValid = genresList.every(genre => genresName.includes(genre));
 			if (!allGenresValid)
 				throw new Error("One or more genres are not present in the database");
@@ -111,12 +113,18 @@ const postNewGame = [
 	async function postNewGame(req, res, next) {
 		try {
 			console.log(req.body);
+			const reqParm = req.body;
 			const errors = validationResult(req);
 			if (!errors.isEmpty()) {
 				const data = await postError(errors.array());
 				return res.status(400).render("newGame", data);
 			}
-			res.send("Ha ido bien");
+			await queries.postGame([
+				reqParm.newGame,
+				reqParm.date,
+				reqParm.devsList,
+			]);
+			res.redirect("/games");
 		} catch (error) {
 			if (error.constraint === "unique_title") {
 				const data = await postError([{ msg: "That game is already registered" }]);

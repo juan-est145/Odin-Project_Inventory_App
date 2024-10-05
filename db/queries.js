@@ -25,6 +25,19 @@ async function getGame(game) {
 	}
 }
 
+async function postGame(game) {
+	if (!game)
+		return (null);
+	try {
+		const { rows } = await pool.query("INSERT INTO games(title,release_date,dev_id) \
+											VALUES($1, $2, (SELECT id FROM developers WHERE name=$3));", game);
+		return (rows);
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+}
+
 async function getAllGenres() {
 	try {
 		const { rows } = await pool.query("SELECT * FROM genres");
@@ -103,6 +116,7 @@ async function postDev(dev) {
 module.exports = {
 	getAllGames,
 	getGame,
+	postGame,
 	getAllGenres,
 	getGenre,
 	postGenre,
