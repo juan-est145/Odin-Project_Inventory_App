@@ -20,17 +20,17 @@ const validatePost = [
 			return (true);
 		}),
 	body("genres").trim()
-	.exists({ values: "falsy" }).withMessage("Select at least one genre")
-	.isLength({ min: 1, max: 255 }).withMessage(`Genre length ${lengthErr}`)
-	.custom(async (value, { req }) => {
-		const genres = await queries.getAllGenres();
-		const genresName = genres.map(genre => genre.genre);
-		const genresList = Array(req.body.genres);
-		const allGenresValid = genresList.every(genre => genresName.includes(genre));
-		if (!allGenresValid)
-			throw new Error("One or more genres are not present in the database");
-		return (true);
-	}),
+		.exists({ values: "falsy" }).withMessage("Select at least one genre")
+		.isLength({ min: 1, max: 255 }).withMessage(`Genre length ${lengthErr}`)
+		.custom(async (value, { req }) => {
+			const genres = await queries.getAllGenres();
+			const genresName = genres.map(genre => genre.genre);
+			const genresList = Array(req.body.genres);
+			const allGenresValid = genresList.every(genre => genresName.includes(genre));
+			if (!allGenresValid)
+				throw new Error("One or more genres are not present in the database");
+			return (true);
+		}),
 ];
 
 function listGames(query) {

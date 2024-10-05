@@ -13,6 +13,8 @@
 		<label for="newGame">Enter game title</label>
 		<input type="text" name="newGame" id="newGame" placeholder="Game title" required>
 		<%- include("./partials/devDropdwn", { devs: devs }) %>
+		<label for="date">Release date</label>
+		<input type="date" name="date" id="date" required>
 		<%- include("./partials/genresOptns", { genres: genres }) %>
 		<label for="password">Password</label>
 		<input type="password" name="password" id="password" placeholder="Password" required>
