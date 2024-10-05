@@ -109,26 +109,26 @@ const postNewGame = [
 			console.log(req.body);
 			const errors = validationResult(req);
 			if (!errors.isEmpty()) {
-				const data = {
-					devs: await queries.getAllDevs(),
-					genres: await queries.getAllGenres(),
-					error: errors.array(),
-				}
+				const data = await postError(errors.array());
 				return res.status(400).render("newGame", data);
 			}
 			res.send("Ha ido bien");
 		} catch (error) {
 			if (error.constraint === "unique_title") {
-				const data = {
-					devs: await queries.getAllDevs(),
-					genres: await queries.getAllGenres(),
-					error: [{ msg: "That game is already registered" }],
-				}
+				const data = await postError([{ msg: "That game is already registered" }]);
 				return res.status(400).render("newGame", data);
 			}
 			next(error);
 		}
 	}
 ];
+
+async function postError(error) {
+	return ({
+		devs: await queries.getAllDevs(),
+		genres: await queries.getAllGenres(),
+		error: error
+	});
+}
 
 module.exports = { getGames, getAllGames, getNewGame, postNewGame };
