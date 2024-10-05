@@ -1,3 +1,4 @@
+const { options } = require("pg/lib/defaults");
 const queries = require("../db/queries");
 const { body, query, validationResult } = require("express-validator");
 
@@ -9,6 +10,9 @@ const validateGet = [
 const validatePost = [
 	body("newGame").trim()
 		.isLength({ min: 1, max: 255 }).withMessage(`Game title length ${lengthErr}`),
+	body("date").trim()
+		.notEmpty().withMessage("Date cannot be empty")
+		.isDate().withMessage("Please enter a valid date"),
 	body("devsList").trim()
 		.exists({ values: "falsy" }).withMessage("Select a dev")
 		.isLength({ min: 1, max: 255 }).withMessage(`Dev name length ${lengthErr}`)
