@@ -10,6 +10,7 @@ const validatePost = [
 	body("newGame").trim()
 		.isLength({ min: 1, max: 255 }).withMessage(`Game title length ${lengthErr}`),
 	body("devsList").trim()
+		.exists({ values: "falsy" }).withMessage("Select a dev")
 		.isLength({ min: 1, max: 255 }).withMessage(`Dev name length ${lengthErr}`)
 		.custom(async (value) => {
 			const devs = await queries.getAllDevs();
@@ -18,6 +19,18 @@ const validatePost = [
 				throw new Error("Dev not present in database");
 			return (true);
 		}),
+	body("genres").trim()
+	.exists({ values: "falsy" }).withMessage("Select at least one genre")
+	.isLength({ min: 1, max: 255 }).withMessage(`Genre length ${lengthErr}`)
+	.custom(async (value, { req }) => {
+		const genres = await queries.getAllGenres();
+		const genresName = genres.map(genre => genre.genre);
+		const genresList = Array(req.body.genres);
+		const allGenresValid = genresList.every(genre => genresName.includes(genre));
+		if (!allGenresValid)
+			throw new Error("One or more genres are not present in the database");
+		return (true);
+	}),
 ];
 
 function listGames(query) {
@@ -105,9 +118,15 @@ const postNewGame = [
 			}
 			res.send("Ha ido bien");
 		} catch (error) {
-			//Modify later so it fills all fields of this view
-			if (error.constraint === "unique_title")
-				return res.status(400).render("newGame", { error: [{ msg: "That game is already registered" }] })
+			if (error.constraint === "unique_title") {
+				const data = {
+					devs: await queries.getAllDevs(),
+					genres: await queries.getAllGenres(),
+					error: [{ msg: "That game is already registered" }],
+				}
+				return res.status(400).render("newGame", data);
+			}
+			next(error);
 		}
 	}
 ];
