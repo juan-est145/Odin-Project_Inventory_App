@@ -113,6 +113,20 @@ async function postDev(dev) {
 	}
 }
 
+async function postGameGenre(gameGenre) {
+	if (!gameGenre)
+		return (null);
+	try {
+		const { rows } = await pool.query("INSERT INTO game_genre(game_id, genre_id) VALUES\
+											((SELECT id FROM games WHERE title=$1),\
+											(SELECT id FROM genres WHERE genre=$2));", gameGenre);
+		return (rows);
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+}
+
 module.exports = {
 	getAllGames,
 	getGame,
@@ -123,4 +137,5 @@ module.exports = {
 	getAllDevs,
 	getDevs,
 	postDev,
+	postGameGenre,
 };
