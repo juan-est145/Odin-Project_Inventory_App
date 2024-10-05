@@ -82,7 +82,7 @@ const postNewGenre = [
 			await queries.postGenre(reqParm);
 			res.redirect("/genres");
 		} catch (error) {
-			if (error.constraint === 'unique_genre')
+			if (error.constraint === "unique_genre")
 				return res.status(400).render("newGenre", { error: [{ msg: "That genre is already registered" }] });
 			next(error);
 		}

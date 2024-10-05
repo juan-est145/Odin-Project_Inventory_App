@@ -1,10 +1,23 @@
 const queries = require("../db/queries");
-const { query, validationResult } = require("express-validator");
+const { body, query, validationResult } = require("express-validator");
 
 const lengthErr = "must be between 1 and 255 characters";
-const validateInput = [
+const validateGet = [
 	query("game").trim()
 		.isLength({ max: 255 }).withMessage(`Search length ${lengthErr}`),
+];
+const validatePost = [
+	body("newGame").trim()
+		.isLength({ min: 1, max: 255 }).withMessage(`Game title length ${lengthErr}`),
+	body("devsList").trim()
+		.isLength({ min: 1, max: 255 }).withMessage(`Dev name length ${lengthErr}`)
+		.custom(async (value) => {
+			const devs = await queries.getAllDevs();
+			const devNames = devs.map(dev => dev.name);
+			if (!devNames.includes(value))
+				throw new Error("Dev not present in database");
+			return (true);
+		}),
 ];
 
 function listGames(query) {
@@ -20,7 +33,7 @@ function listGames(query) {
 }
 
 const getGames = [
-	validateInput,
+	validateGet,
 	async function get(req, res, next) {
 		const viewArgs = {
 			array: [],
@@ -70,10 +83,33 @@ async function getNewGame(req, res, next) {
 	try {
 		const devs = await queries.getAllDevs();
 		const genres = await queries.getAllGenres();
-		res.render("newGame", { devs: devs, genres: genres ,error: null });
+		res.render("newGame", { devs: devs, genres: genres, error: null });
 	} catch (error) {
 		next(error);
 	}
 }
 
-module.exports = { getGames, getAllGames, getNewGame };
+const postNewGame = [
+	validatePost,
+	async function postNewGame(req, res, next) {
+		try {
+			console.log(req.body);
+			const errors = validationResult(req);
+			if (!errors.isEmpty()) {
+				const data = {
+					devs: await queries.getAllDevs(),
+					genres: await queries.getAllGenres(),
+					error: errors.array(),
+				}
+				return res.status(400).render("newGame", data);
+			}
+			res.send("Ha ido bien");
+		} catch (error) {
+			//Modify later so it fills all fields of this view
+			if (error.constraint === "unique_title")
+				return res.status(400).render("newGame", { error: [{ msg: "That game is already registered" }] })
+		}
+	}
+];
+
+module.exports = { getGames, getAllGames, getNewGame, postNewGame };
