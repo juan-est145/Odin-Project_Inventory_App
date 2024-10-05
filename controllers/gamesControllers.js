@@ -1,4 +1,3 @@
-const { options } = require("pg/lib/defaults");
 const queries = require("../db/queries");
 const { body, query, validationResult } = require("express-validator");
 
