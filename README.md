@@ -1,6 +1,6 @@
 # Odin Inventory App
 
-A repository containing a webiste that allows post and get operations with a database.
+A repository containing a website that allows post and get operations with a database.
 
 ## Dependencies
 
